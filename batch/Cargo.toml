@@ -1,0 +1,53 @@
+bench = []
+test = []
+example = []
+
+[[bin]]
+path = "src/main.rs"
+name = "myst-batch"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2018"
+required-features = []
+
+[package]
+name = "myst-batch"
+edition = "2018"
+version = "0.0.1"
+authors = ["kvfi <mail@ouafi.net>"]
+autobins = true
+autoexamples = true
+autotests = true
+autobenches = true
+
+[dependencies]
+chrono = "0.4.19"
+error-chain = "0.12.4"
+job_scheduler = "1.2.1"
+lazy_static = "1.4.0"
+lettre = "0.10"
+log = "0.4.14"
+serde_json = "1.0"
+simple_logger = "4.0.0"
+tera = "1"
+
+[dependencies.diesel]
+version = "2.0.2"
+features = ["sqlite"]
+
+[dependencies.reqwest]
+version = "0.11.3"
+features = ["blocking", "json"]
+
+[dependencies.serde]
+version = "1.0"
+features = ["derive"]
+
+[dependencies.tokio]
+version = "1"
+features = ["full"]
