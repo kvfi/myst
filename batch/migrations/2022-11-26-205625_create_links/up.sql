@@ -1,22 +1,12 @@
 CREATE TABLE IF NOT EXISTS links
 (
-    id
-    INTEGER
-    NOT
-    NULL
-    PRIMARY
-    KEY,
+    id SERIAL PRIMARY KEY,
     resolved_title
     TEXT NOT NULL, resolved_url TEXT NOT NULL, resolved_status INT NOT NULL, added_on TEXT NOT NULL, item_id TEXT NOT NULL UNIQUE);
 
 CREATE TABLE IF NOT EXISTS users
 (
-    id
-    INTEGER
-    NOT
-    NULL
-    PRIMARY
-    KEY,
+    id SERIAL PRIMARY KEY,
     username
     VARCHAR
 (
@@ -28,12 +18,7 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS users
 (
-    id
-    INTEGER
-    NOT
-    NULL
-    PRIMARY
-    KEY,
+    id SERIAL PRIMARY KEY,
     username
     VARCHAR
 (
@@ -45,12 +30,7 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS settings
 (
-    id
-    INTEGER
-    NOT
-    NULL
-    PRIMARY
-    KEY,
+    id SERIAL PRIMARY KEY,
     key
     VARCHAR
 (
@@ -61,7 +41,7 @@ CREATE TABLE IF NOT EXISTS settings
     );
 
 INSERT INTO settings (key, value)
-VALUES ("debug", "true"),
-       ("last_retrieval", NULL),
-       ("batch_schedule", "0 0 0/6 * * *"),
-       ("enable_mail_notification", TRUE);
+VALUES ('debug', 'true'),
+       ('last_retrieval', NULL),
+       ('batch_schedule', '0 0 0/6 * * *'),
+       ('enable_mail_notification', TRUE);

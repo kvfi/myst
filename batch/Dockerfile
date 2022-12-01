@@ -5,7 +5,6 @@ ENV PKG_CONFIG_SYSROOT_DIR /
 RUN rustup target add "$TARGET"
 
 
-
 RUN apt-get update && apt-get upgrade -y && apt-get install -y openssl sqlite3 libsqlite3-dev libssl-dev pkg-config
 
 WORKDIR /app

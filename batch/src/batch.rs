@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::Write;
 use std::time::Duration;
 
-use diesel::SqliteConnection;
+use diesel::pg::PgConnection;
 use job_scheduler::{Job, JobScheduler};
 use lettre::message::{header, MultiPart, SinglePart};
 use lettre::transport::smtp::authentication::Credentials;
@@ -53,7 +53,7 @@ pub(crate) fn send_email_notification(
     }
 }
 
-pub(crate) fn store_new_links_job(conn: &mut SqliteConnection, schedule: &str, mut cfg: &mut Config) {
+pub(crate) fn store_new_links_job(conn: &mut PgConnection, schedule: &str, mut cfg: &mut Config) {
     let mut scheduler = JobScheduler::new();
 
     scheduler.add(Job::new(schedule.parse().unwrap(), || {

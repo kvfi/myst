@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use chrono::Utc;
-use diesel::SqliteConnection;
+use diesel::pg::PgConnection;
 use log::{error, info};
 use reqwest::{Client, StatusCode};
 use serde::{Deserialize, Serialize};
@@ -155,7 +155,7 @@ pub(crate) async fn code_is_valid(config: &mut Config) {
 
 #[tokio::main]
 pub(crate) async fn obtain_links(
-    conn: &mut SqliteConnection,
+    conn: &mut PgConnection,
     config: &mut Config,
 ) -> Result<Vec<LinkItemResponse>, ApiError> {
     let payload = json!({

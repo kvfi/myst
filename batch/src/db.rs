@@ -1,8 +1,9 @@
 use std::time::{Duration, Instant, UNIX_EPOCH};
 
+use crate::schema::links;
 use chrono::{DateTime, Utc};
+use diesel::pg::PgConnection;
 use diesel::prelude::*;
-use diesel::sqlite::SqliteConnection;
 use log::{debug, info};
 
 use crate::api::LinkItemResponse;
@@ -26,12 +27,12 @@ impl Default for DbStorageReport {
     }
 }
 
-pub fn establish_connection(cfg: &Config) -> SqliteConnection {
-    SqliteConnection::establish(&cfg.database_url)
+pub fn establish_connection(cfg: &Config) -> PgConnection {
+    PgConnection::establish(&cfg.database_url)
         .unwrap_or_else(|_| panic!("Error connecting to {}", cfg.database_url))
 }
 
-pub(crate) fn store_pocket_links(conn: &mut SqliteConnection, links: &Vec<LinkItemResponse>) {
+pub(crate) fn store_pocket_links(conn: &mut PgConnection, links: &Vec<LinkItemResponse>) {
     let mut db_storage_report = DbStorageReport {
         total: links.len(),
         ..Default::default()
@@ -59,8 +60,6 @@ pub(crate) fn store_pocket_links(conn: &mut SqliteConnection, links: &Vec<LinkIt
             item_id: &link.item_id,
         };
 
-        use crate::schema::links;
-
         diesel::insert_into(links::table)
             .values(&new_link)
             .execute(conn)
@@ -79,13 +78,13 @@ pub(crate) fn store_pocket_links(conn: &mut SqliteConnection, links: &Vec<LinkIt
     info!("Links stored successfully.");
 }
 
-pub fn get_job_schedule(conn: &mut SqliteConnection) -> String {
+pub fn get_job_schedule(conn: &mut PgConnection) -> String {
     let result: Setting = settings
         .filter(key.eq("batch_schedule"))
         .first::<Setting>(conn)
         .expect("Error loading settings");
     match result.value {
         None => panic!("Cannot retrieve batch schedule setting"),
-        Some(r) => return r
+        Some(r) => return r,
     }
 }

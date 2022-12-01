@@ -1,0 +1,10 @@
+[package]
+name = "myst-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WASM frontend for Myst"
+readme = "README.md"
+license = "MIT"
+
+[dependencies]
+yew = "0.20.0"
