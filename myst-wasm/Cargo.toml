@@ -7,4 +7,6 @@ readme = "README.md"
 license = "MIT"
 
 [dependencies]
-yew = "0.20.0"
+myst-core = { version = "0.1.0", path = "../myst-core" }
+yew = { version = "0.20.0", features = ["csr"] }
+diesel = {version = "2.0.2",features = ["postgres"]}
