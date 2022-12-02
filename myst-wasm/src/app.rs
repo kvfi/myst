@@ -1,7 +1,9 @@
 use yew::prelude::*;
+use crate::data::loaders::load_links;
 
 #[function_component(App)]
 pub fn app() -> Html {
+    load_links(20i64, 0i64);
     let counter = use_state(|| 0);
     let onclick = {
         let counter = counter.clone();
