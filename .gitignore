@@ -1,5 +1,6 @@
 *.db
 backend/
+target/
 .idea
 
 config.json

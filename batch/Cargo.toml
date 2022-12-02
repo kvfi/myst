@@ -26,6 +26,7 @@ autotests = true
 autobenches = true
 
 [dependencies]
+myst-core = { version = "0.1.0", path = "../myst-core" }
 chrono = "0.4.19"
 error-chain = "0.12.4"
 job_scheduler = "1.2.1"

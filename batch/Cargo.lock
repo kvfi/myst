@@ -867,12 +867,22 @@ dependencies = [
  "lazy_static",
  "lettre",
  "log",
+ "myst-core",
  "reqwest",
  "serde",
  "serde_json",
  "simple_logger",
  "tera",
  "tokio",
+]
+
+[[package]]
+name = "myst-core"
+version = "0.1.0"
+dependencies = [
+ "diesel",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

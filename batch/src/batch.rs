@@ -1,20 +1,25 @@
 use std::fs::File;
 use std::io::Write;
-use std::time::Duration;
+use std::time::{Duration, Instant, UNIX_EPOCH};
 
+use chrono::{DateTime, Utc};
 use diesel::pg::PgConnection;
+use diesel::RunQueryDsl;
 use job_scheduler::{Job, JobScheduler};
 use lettre::message::{header, MultiPart, SinglePart};
 use lettre::transport::smtp::authentication::Credentials;
 use lettre::{Message, SmtpTransport, Transport};
-use log::{error, info};
+use log::{debug, error, info};
+use myst_core::db::DbStorageReport;
+use myst_core::{models, schema};
 use tera::Context;
 
+use crate::api::LinkItemResponse;
 use crate::config::{Config, SmtpCredentials};
 use crate::util::TEMPLATES;
 use crate::{api, config};
 
-pub(crate) fn send_email_notification(
+fn send_email_notification(
     smtp_creds: &SmtpCredentials,
     to: String,
     subject: String,
@@ -112,4 +117,53 @@ pub(crate) fn store_new_links_job(conn: &mut PgConnection, schedule: &str, mut c
 
         std::thread::sleep(Duration::from_millis(500));
     }
+}
+
+pub(crate) fn store_pocket_links(conn: &mut PgConnection, links: &Vec<LinkItemResponse>) {
+    let mut db_storage_report = DbStorageReport {
+        total: links.len(),
+        ..Default::default()
+    };
+
+    let now = Instant::now();
+
+    for link in links {
+        let time_added_st = UNIX_EPOCH + Duration::from_secs(link.time_added.parse().unwrap());
+        let time_added = DateTime::<Utc>::from(time_added_st)
+            .format("%Y-%m-%d %H:%M:%S")
+            .to_string();
+
+        let new_link = models::NewLink {
+            resolved_title: match &link.resolved_title {
+                None => {
+                    debug!("Link option is NULL, setting it to an empty string.");
+                    ""
+                }
+                Some(title) => title,
+            },
+            resolved_url: match &link.resolved_url {
+                None => "",
+                Some(url) => url,
+            },
+            resolved_status: &0,
+            added_on: &time_added,
+            item_id: &link.item_id,
+        };
+
+        diesel::insert_into(schema::links::table)
+            .values(&new_link)
+            .execute(conn)
+            .expect("Error saving new post");
+
+        db_storage_report.inserted = db_storage_report.inserted + 1;
+        info!("Successfully added {}", new_link.resolved_title);
+    }
+
+    db_storage_report.time = now.elapsed().as_millis() / 100;
+
+    debug!("Total links: {}", db_storage_report.total);
+    debug!("Total inserted: {}", db_storage_report.inserted);
+    debug!("Total time: {}", db_storage_report.time);
+
+    info!("Links stored successfully.");
 }

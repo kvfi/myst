@@ -7,8 +7,8 @@ use reqwest::{Client, StatusCode};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
+use crate::batch;
 use crate::config::Config;
-use crate::db;
 
 #[derive(Deserialize)]
 struct RequestCodeResponse {
@@ -182,7 +182,7 @@ pub(crate) async fn obtain_links(
                 LinkListResponse::Success { list, .. } => {
                     let links: Vec<LinkItemResponse> = list.values().cloned().collect();
                     config.last_retrieval = Option::from(Utc::now().timestamp());
-                    db::store_pocket_links(conn, &links);
+                    batch::store_pocket_links(conn, &links);
                     config.save();
                     Ok(links)
                 }
