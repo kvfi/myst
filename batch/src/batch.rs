@@ -11,7 +11,7 @@ use lettre::transport::smtp::authentication::Credentials;
 use lettre::{Message, SmtpTransport, Transport};
 use log::{debug, error, info};
 use myst_core::db::DbStorageReport;
-use myst_core::{models, schema};
+use myst_core::{models, schemas};
 use tera::Context;
 
 use crate::api::LinkItemResponse;
@@ -150,7 +150,7 @@ pub(crate) fn store_pocket_links(conn: &mut PgConnection, links: &Vec<LinkItemRe
             item_id: &link.item_id,
         };
 
-        diesel::insert_into(schema::links::table)
+        diesel::insert_into(schemas::links::table)
             .values(&new_link)
             .execute(conn)
             .expect("Error saving new post");

@@ -1,5 +1,5 @@
 use crate::models::Setting;
-use crate::schema::settings::dsl::*;
+use crate::schemas::settings::dsl::*;
 use diesel::prelude::*;
 use diesel::Connection;
 use diesel::PgConnection;

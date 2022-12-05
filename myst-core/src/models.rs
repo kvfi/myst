@@ -1,6 +1,6 @@
 use diesel::prelude::*;
 
-use crate::schema::links;
+use crate::schemas::links;
 
 #[derive(Queryable)]
 pub struct Link {
@@ -26,5 +26,5 @@ pub struct NewLink<'a> {
 pub struct Setting {
     pub id: i32,
     pub key: String,
-    pub value: Option<String>,
+    pub value: Option<String>
 }
